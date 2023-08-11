@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>
+      1'den 99'a kadar olan sayıları for döngüsü ile yan yana
+      <button id="writeNums" onclick="writeNumbers()">sırala</button>
+    </p>
+    <br />
+    <button disabled id="chooseRandomNumber" onclick="chooseRandomNumber()">
+      Rastgele Sayı Seç
+    </button>
+    <br />
+    <br />
+    <div id="numbers"></div>
+    <script>
+      function writeNumbers() {
+        var writeNumsButton = document.getElementById("writeNums");
+        writeNumsButton.disabled = true;
+        var randomNumberButton = document.getElementById("chooseRandomNumber");
+        randomNumberButton.disabled = false;
+        var numbersContainer = document.getElementById("numbers");
+
+        for (var i = 1; i < 100; i++) {
+          if (i % 10 === 0) {
+            numbersContainer.innerHTML += `<span>${i}</span><br /><br />`;
+          } else {
+            numbersContainer.innerHTML += `<span>${i} </span>`;
+          }
+        }
+      }
+
+      var redNumbers = [];
+
+      function chooseRandomNumber() {
+        var randomNumber = generateRandomNumber();
+        var numbers = document.querySelectorAll("#numbers span");
+
+        for (var i of numbers) {
+          if (i.textContent.trim() === randomNumber.toString()) {
+            i.style.color = "red";
+            i.style.fontWeight = "bold";
+            redNumbers.push(randomNumber);
+          }
+        }
+      }
+
+      function generateRandomNumber() {
+        var number = Math.floor(Math.random() * 99) + 1;
+
+        if (redNumbers.includes(number)) {
+          console.log(number);
+          generateRandomNumber();
+        }
+
+        return number;
+      }
+    </script>
+  </body>
+</html>

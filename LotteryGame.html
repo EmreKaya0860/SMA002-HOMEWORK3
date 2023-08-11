@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Sayısal Loto Oyunu</h1>
+    <br />
+    <p>Aşağıdaki inputlara tahminlerini giriniz;</p>
+    <input type="number" name="guessNumbers[]" onblur="checkInput(this)" />
+    <input type="number" name="guessNumbers[]" onblur="checkInput(this)" />
+    <input type="number" name="guessNumbers[]" onblur="checkInput(this)" />
+    <input type="number" name="guessNumbers[]" onblur="checkInput(this)" />
+    <input type="number" name="guessNumbers[]" onblur="checkInput(this)" />
+    <input type="number" name="guessNumbers[]" onblur="checkInput(this)" />
+    <button id="makeGuessButton" onclick="MakeGuess()">Tahmin Gir</button>
+    <br />
+    <p id="afterGuess"></p>
+    <hr />
+    <button disabled id="drawLotsButton" onclick="drawLots()">
+      Kurayı Çek
+    </button>
+    <p>Loto Sayıları</p>
+    <input type="number" name="lotteryNum[]" disabled />
+    <input type="number" name="lotteryNum[]" disabled />
+    <input type="number" name="lotteryNum[]" disabled />
+    <input type="number" name="lotteryNum[]" disabled />
+    <input type="number" name="lotteryNum[]" disabled />
+    <input type="number" name="lotteryNum[]" disabled />
+    <br />
+    <p id="knownNums"></p>
+    <p id="knownCounter"></p>
+    <script>
+      var enteredNums = [];
+      var lotteryNums = [];
+      var guessedNumbers = [];
+
+      function MakeGuess() {
+        var err = false;
+
+        var guessNumbers = document.querySelectorAll(
+          "input[name='guessNumbers[]']"
+        );
+
+        guessNumbers.forEach((input) => {
+          if (input.value > 49 || input.value < 1 || isNaN(input.value)) {
+            alert("1-49 sayıları arasında tahminler girmelisiniz!");
+            err = true;
+          }
+        });
+
+        if (!err) {
+          document.getElementById("makeGuessButton").disabled = true;
+          document.getElementById("drawLotsButton").disabled = false;
+          document.getElementById("afterGuess").innerHTML = "Tahminler Girildi";
+          enteredNums.sort((a, b) => a - b);
+          for (let i = 0; i < enteredNums.length; i++) {
+            guessNumbers[i].value = enteredNums[i];
+            guessNumbers[i].disabled = true;
+          }
+        }
+      }
+
+      function checkInput(input) {
+        var value = parseInt(input.value);
+        if (enteredNums.includes(value)) {
+          console.log(value);
+          input.value = "";
+          alert("Aynı tahmin bir kez girilebilir.");
+          console.log(value);
+          console.log(enteredNums);
+        } else {
+          if (!isNaN(value)) {
+            enteredNums.push(value);
+          }
+        }
+      }
+
+      function drawLots() {
+        var min = 1;
+        var max = 49;
+        var numCount = 6;
+
+        for (var i = 0; i < numCount; i++) {
+          var randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+          lotteryNums.push(randomNumber);
+        }
+
+        var lotteryInputs = document.querySelectorAll(
+          "input[name='lotteryNum[]']"
+        );
+        for (var i = 0; i < numCount; i++) {
+          lotteryInputs[i].value = lotteryNums[i];
+        }
+
+        compareNumbers();
+      }
+
+      function compareNumbers() {
+        var knownNumsElement = document.getElementById("knownNums");
+        var knownCounterElement = document.getElementById("knownCounter");
+
+        var guessedNumbers = enteredNums.filter((num) =>
+          lotteryNums.includes(num)
+        );
+        knownNumsElement.textContent =
+          "Bilinen sayılar: " + guessedNumbers.join(", ");
+        knownCounterElement.textContent =
+          guessedNumbers.length + " adet sayı bildiniz";
+      }
+    </script>
+  </body>
+</html>
